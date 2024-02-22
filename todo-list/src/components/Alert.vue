@@ -38,11 +38,7 @@ export default {
 
   emits: [
     'close'
-  ], 
-
-  methods: {
-    
-  }  
+  ],  
 }
 </script>
 
