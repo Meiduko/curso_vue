@@ -1,37 +1,41 @@
 <template>
-  <button :style="{ backgroundColor }" @click.prevent="$emit('click')"
-    :class="{circle: applyCircleClass}"
+  <button
+    :style="{ backgroundColor }"
+    @click.prevent="$emit('click')"
+    :class="{ circle: applyCircleClass }"
   >
     <slot />
   </button>
 </template>
+
 <script>
 export default {
   props: {
     type: {
-      default: 'success',
+      required: false,
+      default: "success",
       validator(value) {
-        const options = ['danger', 'warning', 'info', 'success', 'secondary'];
+        const options = ["danger", "warning", "info", "success", "secondary"];
 
         return options.includes(value);
-      }
+      },
     },
 
     circle: {
       default: false,
-    }
+      type: Boolean,
+    },
   },
 
   computed: {
-    backgroundColor(){
+    backgroundColor() {
       const options = {
         danger: "var(--danger-color)",
         info: "var(--info-color)",
         warning: "var(--warning-color)",
         success: "var(--accent-color)",
         secondary: "var(--secondary-color)",
-        
-      }
+      };
 
       return options[this.type];
     },
@@ -41,10 +45,10 @@ export default {
     },
   },
 
-
-  emits: ['click']
-}
+  emits: ["click"],
+};
 </script>
+
 <style scoped>
 button {
   color: var(--text-color);
