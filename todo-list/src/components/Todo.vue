@@ -2,15 +2,23 @@
   <div class="todo" v-for="todo in todos" :key="todo.id">
     <p>{{ todo.title }}</p>
     <div>
-      <button @click="$emit('close', todo.id)" class="remove-todo-btn">
+      <Btn :circle="true" type="secondary" @click="$emit('remove', todo.id)" class="btn edit-todo-btn">
+        <Pencil/>
+      </Btn>
+      <Btn :circle="true" type="danger" @click="$emit('remove', todo.id)" class="btn">
         &times;
-      </button>
+      </Btn>
     </div>
   </div>
 </template>
 
 <script>
+import Btn from "./Btn.vue"
+import Pencil from './icons/Pencil.vue'
+
 export default {
+  components: { Btn, Pencil },
+
   data() {
     return{
       todos: [],
@@ -24,12 +32,15 @@ export default {
   },
 
   emits: [
-    'close'
+    'remove'
   ]
 }
 </script>
 
 <style scoped>
+.todo > div{
+  display: flex;
+}
 .todo {
   display: flex;
   justify-content: space-between;
@@ -40,14 +51,14 @@ export default {
   border-radius: 10px;
 }
 
-.remove-todo-btn {
-  border-radius: 50%;
-  border: none;
+.edit-todo-btn{
+  margin-right: 5px;
+}
+
+.btn {
   height: 40px;
   width: 40px;
   font-size: 30px;
-  color: var(--text-color);
-  background: var(--danger-color);
   cursor: pointer;
 }
 </style>

@@ -6,7 +6,7 @@
       <add-todo-form @submit="addTodo" />
     </section>
     <section>
-      <Todo :todos="todos" @close="removeTodo"/>
+      <Todo :todos="todos" @remove="removeTodo"/>
     </section>
   </main>
 </template>
@@ -42,7 +42,6 @@ export default {
       });
     },
     removeTodo(id) {
-      console.log(id);
       this.todos = this.todos.filter(todo => todo.id !== id);
     }
   },
