@@ -1,5 +1,6 @@
 <template>
   <button
+    class="btn"
     :style="{ backgroundColor }"
     :class="{ circle: applyCircleClass }"
     v-bind="$attrs"
@@ -49,7 +50,7 @@ export default {
 </script>
 
 <style scoped>
-button {
+.btn {
   color: var(--text-color);
   border: none;
   cursor: pointer;
@@ -57,7 +58,9 @@ button {
   justify-content: center;
   align-items: center;
 }
-
+.btn:disabled{
+  opacity: 70%;
+}
 .circle {
   border-radius: 50%;
 }
