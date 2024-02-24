@@ -1,15 +1,15 @@
 <template >
-  <div v-if="show" class="modal">
+  <div ref="modal" v-show="show" class="modal">
 
     <div class="modal-content">
       <div class="modal-header">
-        <slot name="header"/>
+        <slot name="header" />
       </div>
       <div class="modal-body">
-        <slot name="content"/>
+        <slot name="content" />
       </div>
       <div class="modal-footer">
-        <slot name="footer"/>
+        <slot name="footer" />
       </div>
     </div>
 
@@ -22,6 +22,37 @@ export default {
     show: {
       default: false,
     }
+  },
+
+  data() {
+    return {
+      clickListener: (e) => {
+        console.log(e.target);
+        if (e.target === this.$refs.modal) {
+          this.$emit('close')
+        }
+      },
+
+      closeOnEscapeListener: (e) => {
+        if (e.key === 'Escape') {
+          this.$emit('close');
+        }
+      }
+    }
+  },
+
+  emits: [
+    'close'
+  ],
+
+  mounted() {
+    window.addEventListener('click', this.clickListener);
+    window.addEventListener('keydown', this.closeOnEscapeListener);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener('click', this.clickListener);
+    window.removeEventListener('keydown', this.closeOnEscapeListener);
   }
 }
 </script>
@@ -91,6 +122,7 @@ body {
     opacity: 1
   }
 }
+
 .modal-header {
   padding: 2px 16px;
   background-color: rgb(83, 83, 93);
