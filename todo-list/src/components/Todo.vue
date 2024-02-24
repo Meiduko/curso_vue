@@ -29,6 +29,7 @@ export default {
       type: String,
     },
   },
+
   emits: ["remove", "edit"],
 };
 </script>

@@ -122,12 +122,14 @@ export default {
       this.editTodoForm.todo = { ...todo };
     },
 
-    updateTodo() {
+    async updateTodo() {
       const todo = this.todos.find(
         (todo) => todo.id === this.editTodoForm.todo.id
       );
       todo.title = this.editTodoForm.todo.title;
+      todo.id = this.editTodoForm.todo.id;
       this.editTodoForm.show = false;
+      await axios.put(`/api/todos/${todo.id}`, {'id': todo.id, 'title': todo.title});
     },
 
     async removeTodo(id) {
