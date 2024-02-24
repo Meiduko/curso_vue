@@ -87,7 +87,7 @@ export default {
     async fetchTodos() {
       this.isLoading = true;
       try {
-        const res = await axios.get('http://localhost:8080/todos'); 
+        const res = await axios.get('/api/todos'); 
         this.todos = await res.data;
       } catch (e) {
         this.showAlert('Failed loading todos, check your connection')
@@ -107,7 +107,7 @@ export default {
         return;
       }
       this.isPostingTodo = true;
-      const res = await axios.post('http://localhost:8080/todos', {
+      const res = await axios.post('/api/todos', {
         title
       });
       this.isPostingTodo = false;
@@ -131,7 +131,7 @@ export default {
     },
 
     async removeTodo(id) {
-      await axios.delete(`http://localhost:8080/todos/${id}`)
+      await axios.delete(`/api/todos/${id}`)
       this.fetchTodos();
     },
   },
