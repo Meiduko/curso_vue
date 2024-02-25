@@ -29,116 +29,93 @@
   </main>
 </template>
 
-<script>
+<script setup>
 import Alert from "./components/Alert.vue";
 import Navbar from "./components/Navbar.vue";
 import AddTodoForm from "./components/AddTodoForm.vue";
 import Todo from "./components/Todo.vue";
-import Btn from "./components/Btn.vue";
 import axios from "axios";
 import Spinner from './components/Spinner.vue';
 import EditTodoForm from './components/EditTodoForm.vue';
+import { reactive, ref } from "vue";
 
-export default {
-  components: {
-    Alert,
-    Navbar,
-    AddTodoForm,
-    Todo,
-    Btn,
-    Spinner,
-    EditTodoForm,
-  },
+const todos = ref([]);
+const alert = reactive({
+  show: false,
+  message: '',
+  variant: 'danger',
+})
+const isLoading = ref(false);
+const isPostingTodo = ref(false);
+const editTodoForm = reactive({
+  show: false,
+  todo: {
+    id: 0,
+    title: "",
+  }
+});
 
-  data() {
-    return {
-      todoTitle: "",
-      todos: [],
-      alert: {
-        show: false,
-        message: '',
-        variant: 'danger',
-      },
-      isLoading: false,
-      isPostingTodo: false,
-      editTodoForm: {
-        show: false,
-        todo: {
-          id: 0,
-          title: "",
-        },
-      },
-    };
-  },
+fetchTodos();
 
-  created() {
-    this.fetchTodos();
-  },
+function showAlert(message, variant = "danger") {
+  alert.message = message;
+  alert.show = true;
+  alert.variant = variant;
+}
 
-  methods: {
-    async fetchTodos() {
-      this.isLoading = true;
-      try {
-        const res = await axios.get('/api/todos'); 
-        this.todos = await res.data;
-      } catch (e) {
-        this.showAlert('Failed loading todos, check your connection')
-      }
-      this.isLoading = false;
-    },
+function showEditTodoForm(todo) {
+  editTodoForm.show = true;
+  editTodoForm.todo = { ...todo };
+}
 
-    showAlert(message, variant = "danger") {
-      this.alert.show = true;
-      this.alert.message = message;
-      this.alert.variant = variant;
-    },
+async function fetchTodos() {
+  isLoading.value = true;
+  try {
+    const res = await axios.get('/api/todos');
+    todos.value = res.data;
+  } catch (e) {
+    showAlert('Failed loading todos, check your connection')
+  }
+  isLoading.value = false;
+}
 
-    async addTodo(title) {
-      if (title === "") {
-        this.showAlert('Todo title is required')
-        return;
-      }
-      this.isPostingTodo = true;
-      const res = await axios.post('/api/todos', {
-        title
-      });
-      this.isPostingTodo = false;
+async function addTodo(title) {
+  if (title === "") {
+    showAlert('Todo title is required')
+    return;
+  }
+  isPostingTodo.value = true;
+  const res = await axios.post('/api/todos', {
+    title
+  });
+  isPostingTodo.value = false;
 
-      console.log(res.data);
+  todos.value.push(res.data);
+}
 
-      this.fetchTodos();
-    },
+async function updateTodo() {
+  try {
+    // todo.title = this.editTodoForm.todo.title;
+    // todo.id = this.editTodoForm.todo.id;
+    const { id, title } = editTodoForm.todo;
+    // await axios.put(`/api/todos/${todo.id}`, {'id': todo.id, 'title': todo.title});
+    await axios.put(`/api/todos/${id}`, { title });
+    const todo = todos.value.find(
+      (todo) => todo.id === editTodoForm.todo.id
+    );
+    todo.title = editTodoForm.todo.title;
+  } catch (e) {
+    showAlert("Failed updating todo");
+  }
+  // this.editTodoForm.show = false;
+  editTodoForm.show = false;
 
-    showEditTodoForm(todo) {
-      this.editTodoForm.show = true;
-      this.editTodoForm.todo = { ...todo };
-    },
+}
 
-    async updateTodo() {
-      try {
-        // todo.title = this.editTodoForm.todo.title;
-        // todo.id = this.editTodoForm.todo.id;
-        const { id, title } = this.editTodoForm.todo;
-        // await axios.put(`/api/todos/${todo.id}`, {'id': todo.id, 'title': todo.title});
-        await axios.put(`/api/todos/${id}`, { title });
-        const todo = this.todos.find(
-          (todo) => todo.id === this.editTodoForm.todo.id
-        );
-        todo.title = this.editTodoForm.todo.title;
-      } catch (e) {
-        this.showAlert("Failed updating todo");
-      }
-      // this.editTodoForm.show = false;
-      this.editTodoForm.show = false;
-
-    },
-
-    async removeTodo(id) {
-      await axios.delete(`/api/todos/${id}`)
-      this.fetchTodos();
-    },
-  },
-};
+async function removeTodo(id) {
+  await axios.delete(`/api/todos/${id}`)
+  todos.value = todos.value.filter((todo) => todo.id !== id);
+}
 </script>
 
 <style scoped>
