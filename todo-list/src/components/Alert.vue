@@ -6,7 +6,13 @@
 </template>
 
 <script>
+import { backgroundColor } from '../mixins/backgroundColor';
+
 export default {
+  mixins: [
+    backgroundColor,
+  ],
+
   props: {
     message: {
       required: true,
@@ -16,24 +22,6 @@ export default {
       required: true,
       type: Boolean,
     },
-    type: {
-      default: 'danger',
-      validator(value) {
-        return ['danger', 'warning', 'info'].includes(value)
-      }
-    }
-  },
-
-  computed: {
-    backgroundColor(){
-      const options = {
-        danger: "var(--danger-color)",
-        info: "var(--info-color)",
-        warning: "var(--warning-color)",
-      }
-
-      return options[this.type];
-    }
   },
 
   emits: [

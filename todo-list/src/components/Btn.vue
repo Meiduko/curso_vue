@@ -10,18 +10,14 @@
 </template>
 
 <script>
+import { backgroundColor } from '../mixins/backgroundColor.js'
+
 export default {
+  mixins: [
+    backgroundColor,
+  ],
+
   props: {
-    variant: {
-      required: false,
-      default: "success",
-      validator(value) {
-        const options = ["danger", "warning", "info", "success", "secondary"];
-
-        return options.includes(value);
-      },
-    },
-
     circle: {
       default: false,
       type: Boolean,
@@ -29,23 +25,10 @@ export default {
   },
 
   computed: {
-    backgroundColor() {
-      const options = {
-        danger: "var(--danger-color)",
-        info: "var(--info-color)",
-        warning: "var(--warning-color)",
-        success: "var(--accent-color)",
-        secondary: "var(--secondary-color)",
-      };
-
-      return options[this.variant];
-    },
-
     applyCircleClass() {
       return this.circle;
     },
   },
-
 };
 </script>
 
