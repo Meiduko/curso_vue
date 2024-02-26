@@ -1,32 +1,49 @@
 <template>
   <div v-if="show" class="alert" :style="{backgroundColor}">
     <p>{{ message }}</p>
-    <p @click="$emit('close')" class="close-alert">&times;</p>
+    <p @click="close" class="close-alert">&times;</p>
   </div>
 </template>
 
-<script>
-import { backgroundColor } from '../mixins/backgroundColor';
+<script setup>
+import { computed } from 'vue';
 
-export default {
-  mixins: [
-    backgroundColor,
-  ],
+const props = defineProps({
+  variant: {
+    required: false,
+    default: "success",
+    validator(value) {
+      const options = ["danger", "warning", "info", "success", "secondary"];
 
-  props: {
-    message: {
-      required: true,
-      type: String,
-    },
-    show: {
-      required: true,
-      type: Boolean,
+      return options.includes(value);
     },
   },
+  message: {
+    required: true,
+    type: String,
+  },
+  show: {
+    required: true,
+    type: Boolean,
+  },
+})
 
-  emits: [
-    'close'
-  ],  
+const emit = defineEmits(['close']);
+
+const backgroundColor = computed(() => {
+  const options = {
+    danger: "var(--danger-color)",
+    info: "var(--info-color)",
+    warning: "var(--warning-color)",
+    success: "var(--accent-color)",
+    secondary: "var(--secondary-color)",
+  };
+
+  return options[props.variant];
+});
+
+function close () {
+  emit('close');
 }
 </script>
 
