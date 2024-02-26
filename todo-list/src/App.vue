@@ -3,7 +3,7 @@
   <main class="container">
     <EditTodoForm
       :show="editTodoForm.show"
-      @close="editTodoForm = false"
+      @close="editTodoForm.show = false"
       @submit="updateTodo"
       v-model="editTodoForm.todo.title"
     />

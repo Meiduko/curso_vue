@@ -5,33 +5,38 @@
       <Btn
         circle
         variant="secondary"
-        @click="$emit('edit')"
+        @click="edit"
         class="btn edit-todo-btn"
       >
         <Pencil />
       </Btn>
-      <Btn circle variant="danger" @click="$emit('remove')" class="btn">
+      <Btn circle variant="danger" @click="remove" class="btn">
         &times;
       </Btn>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Btn from "./Btn.vue";
 import Pencil from "./icons/Pencil.vue";
 
-export default {
-  components: { Btn, Pencil },
-  props: {
+const props = defineProps({
     title: {
       required: true,
       type: String,
     },
-  },
+  })
 
-  emits: ["remove", "edit"],
-};
+const emit = defineEmits(["remove", "edit"])
+
+function edit(){
+  emit('edit');
+}
+
+function remove(){
+  emit('remove');
+}
 </script>
 
 <style scoped>
