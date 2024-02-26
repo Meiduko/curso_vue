@@ -3,7 +3,7 @@
   <main class="container">
     <EditTodoForm
       :show="editTodoForm.show"
-      @close="editTodoForm = false"
+      @close="editTodoForm.show = false"
       @submit="updateTodo"
       v-model="editTodoForm.todo.title"
     />
@@ -80,7 +80,7 @@ async function fetchTodos() {
 }
 
 async function addTodo(title) {
-  if (title === "") {
+  if (title === "" || title === undefined) {
     showAlert('Todo title is required')
     return;
   }

@@ -16,44 +16,40 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    show: {
-      default: false,
-    }
-  },
+<script setup>
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-  data() {
-    return {
-      clickListener: (e) => {
-        if (e.target === this.$refs.modal) {
-          this.$emit('close')
-        }
-      },
+const modal = ref(null)
 
-      closeOnEscapeListener: (e) => {
-        if (e.key === 'Escape') {
-          this.$emit('close');
-        }
-      }
-    }
-  },
+const props = defineProps({
+  show: {
+    default: false,
+  }
+})
 
-  emits: [
-    'close'
-  ],
-
-  mounted() {
-    window.addEventListener('click', this.clickListener);
-    window.addEventListener('keydown', this.closeOnEscapeListener);
-  },
-
-  beforeUnmount() {
-    window.removeEventListener('click', this.clickListener);
-    window.removeEventListener('keydown', this.closeOnEscapeListener);
+function clickListener(e) {
+  if(e.target === modal.value) {
+    emit('close')
   }
 }
+
+function closeOnEscapeListener (e) {
+  if (e.key === 'Escape') {
+    emit('close')
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('click', clickListener);
+  window.addEventListener('keydown', closeOnEscapeListener);
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('click', clickListener);
+  window.removeEventListener('keydown', closeOnEscapeListener);
+})
+
+const emit = defineEmits(['close']);
 </script>
 
 <style scoped>
