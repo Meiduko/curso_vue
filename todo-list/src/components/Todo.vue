@@ -1,7 +1,9 @@
 <template>
   <div class="todo">
     <p>{{ title }}</p>
-    <div>
+    <p>{{ description }}</p>
+    <p>{{ date }}</p>
+    <div class="btn-div">
       <Btn
         circle
         variant="secondary"
@@ -26,6 +28,14 @@ const props = defineProps({
       required: true,
       type: String,
     },
+    description: {
+      required: true,
+      type: String
+    },
+    date: {
+      required: true,
+      type: String
+    }
   })
 
 const emit = defineEmits(["remove", "edit"])
@@ -41,6 +51,7 @@ function remove(){
 
 <style scoped>
 .todo {
+  justify-self: center;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,7 +60,10 @@ function remove(){
   padding: 0 20px 0 20px;
   border-radius: 10px;
 }
-
+.todo>p{
+    inline-size: 150px;
+    overflow: hidden;
+  }
 .todo > div {
   display: flex;
 }
@@ -57,10 +71,27 @@ function remove(){
 .edit-todo-btn {
   margin-right: 5px;
 }
-
 .btn {
   height: 40px;
   width: 40px;
   font-size: 30px;
+}
+@media (max-width: 900px){
+  .todo{
+  display: inline-block;
+  justify-content: start;
+  align-items: center;
+  border-radius: 10px;
+  height: fit-content;
+  margin: 20px;
+  }
+  .todo>p{
+    inline-size: 200px;
+    overflow-wrap: break-word;
+  }
+  .btn-div{
+    display: flexbox;
+    justify-content: flex-end;
+  }
 }
 </style>

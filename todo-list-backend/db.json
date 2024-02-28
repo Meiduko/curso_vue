@@ -2,11 +2,33 @@
   "todos": [
     {
       "id": "1",
-      "title": "Pasear al perro"
+      "title": "Pasear al perro",
+      "description": "Por la tarde",
+      "date": "2020-02-20"
     },
     {
+      "id": "7c6c",
+      "title": "adsf",
+      "description": "qewr",
+      "date": "12121-02-21"
+    },
+    {
+      "id": "622f",
       "title": "Refactorizar proyecto",
-      "id": "2"
+      "description": "refactorizar con script setup todos los components",
+      "date": "1234-02-23"
+    },
+    {
+      "id": "ab28",
+      "title": "lakjfdljflasdjfasñdj",
+      "description": "añsldfjsadkjfjadlñfjadkjflasdjfasdjfasl",
+      "date": "82828-02-28"
+    },
+    {
+      "id": "7c47",
+      "title": "asdf",
+      "description": "qwer",
+      "date": "2002-12-13"
     }
   ]
 }

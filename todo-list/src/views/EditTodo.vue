@@ -5,6 +5,7 @@
     variant="danger" 
     :message="alert.message" 
     :show="alert.show"
+    @close="router.push('/')"
   />
 
   <div v-if="todo !== null" class="form">
@@ -14,6 +15,14 @@
         <label>Todo Title</label>
       </div>
       <input type="text" v-model="todo.title" />
+      <div>
+        <label>Todo Description</label>
+      </div>
+      <input type="text" v-model="todo.description">
+      <div>
+        <label>Todo Date</label>
+      </div>
+      <input type="date" v-model="todo.date">
     </form>
 
     <div class="submit">
@@ -31,20 +40,19 @@ import Spinner from "@/components/Spinner.vue";
 import Alert from "@/components/Alert.vue";
 import { useFetch } from "../composables/fetch";
 import axios from "axios";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from 'vue-router'
+import { useAlert, alert } from "@/composables/alert";
 
 const props = defineProps(['id']);
 
-const alert = reactive({message: '', show: false});
 const isUpdatingTodo = ref(false);
 
 const router = useRouter();
 
 const { data: todo, error, isLoading } = useFetch(`/api/todos/${props.id}`, {
   onError: () => {
-    alert.show = true;
-    alert.message = 'Failed loading todos';
+    useAlert('Failed loading todos')
   }
 })
 
@@ -55,9 +63,7 @@ async function submit() {
     await axios.put(`/api/todos/${props.id}`, todo.value);
     router.push('/');
   } catch (e) {
-    console.error(e);
-    alert.show = true;
-    alert.message = 'Failed updating todo';
+    useAlert('Failed uploading todo')
   }
   isUpdatingTodo.value = false;
 
@@ -69,6 +75,7 @@ async function submit() {
   width: 100%;
   height: 30px;
   border: 1px solid var(--accent-color);
+  margin-top: 10px;
 }
 
 .form {

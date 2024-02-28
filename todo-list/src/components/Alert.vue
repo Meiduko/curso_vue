@@ -7,16 +7,10 @@
 
 <script setup>
 import { useBackgroundColor, backgroundColorProps } from "../composables/backgroundColor.js";
+import { alertProps } from "@/composables/alert";
 
 const props = defineProps({
-  message: {
-    required: true,
-    type: String,
-  },
-  show: {
-    required: true,
-    type: Boolean,
-  },
+  ...alertProps,
   ...backgroundColorProps
 })
 

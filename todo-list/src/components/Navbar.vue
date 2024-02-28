@@ -7,6 +7,7 @@
     <div class="links">
       <ul>
         <li><RouterLink to="/">Home</RouterLink></li>
+        <li><RouterLink to="/todos/create">Add Todo</RouterLink></li>
         <li><RouterLink to="/about">About</RouterLink></li>
       </ul>
     </div>
@@ -48,7 +49,7 @@ export default {
 
 .links a {
   font-size: 30px;
-  margin-left: 10px;
+  margin-left: 20px;
   text-decoration: none;
   color: var(--text-color);
 }

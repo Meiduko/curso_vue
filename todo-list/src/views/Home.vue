@@ -1,79 +1,38 @@
 <template>
-    <Alert 
-      :message="alert.message" 
-      :show="alert.show" 
-      :variant="alert.variant" 
-      @close="alert.show = false" 
-      />
-
-    <section>
-      <AddTodoForm :isLoading="isPostingTodo" @submit="addTodo" />
-    </section>
-
-    <section>
-      <Spinner class="spinner" v-if="isLoading" />
-      <div v-else>
-        <Todo v-for="todo in todos" :key="todo.id" :title="todo.title" @remove="removeTodo(todo.id)"
-        @edit="$router.push(`/todos/${todo.id}/edit`)"/>
-      </div>
-    </section>
+  <Alert :message="alert.message" :show="alert.show" :variant="alert.variant" @close="alert.show = false" />
+  <section>
+    <Spinner class="spinner" v-if="isLoading" />
+    <div v-else>
+      <Todo v-for="todo in todos" :key="todo.id" :title="todo.title" :description="todo.description" :date="todo.date"
+        @remove="removeTodo(todo.id)" @edit="$router.push(`/todos/${todo.id}/edit`)" />
+    </div>
+  </section>
 </template>
 
 <script setup>
-import Alert from "../components/Alert.vue";
-import AddTodoForm from "../components/AddTodoForm.vue";
-import Todo from "../components/Todo.vue";
+import Alert from "@/components/Alert.vue";
+import Todo from "@/components/Todo.vue";
 import axios from "axios";
-import Spinner from '../components/Spinner.vue';
-import { reactive, ref } from "vue";
-import { useFetch } from '../composables/fetch'
-
-const alert = reactive({
-  show: false,
-  message: '',
-  variant: 'danger',
-})
-const isPostingTodo = ref(false);
-const editTodoForm = reactive({
-  show: false,
-  todo: {
-    id: 0,
-    title: "",
-  }
-});
+import Spinner from '@/components/Spinner.vue';
+import { useFetch } from '@/composables/fetch'
+import { useAlert, alert } from "@/composables/alert";
 
 const { data: todos, isLoading } = useFetch('/api/todos', {
-  onError: () => showAlert('Failed loading todos')
+  onError: () => useAlert('Failed loading todos', 'danger')
 });
 
-function showAlert(message, variant = "danger") {
-  alert.message = message;
-  alert.show = true;
-  alert.variant = variant;
-}
-
-async function addTodo(title) {
-  if (title === "" || title === undefined) {
-    showAlert('Todo title is required')
-    return;
-  }
-  isPostingTodo.value = true;
-  const res = await axios.post('/api/todos', {
-    title
-  });
-  isPostingTodo.value = false;
-
-  todos.value.push(res.data);
-}
-
 async function removeTodo(id) {
-  await axios.delete(`/api/todos/${id}`)
-  todos.value = todos.value.filter((todo) => todo.id !== id);
+  try {
+    await axios.delete(`/api/todos/${id}`)
+    todos.value = todos.value.filter((todo) => todo.id !== id);
+  }catch(e){
+    useAlert('Failed deleting todo', 'danger')
+  }
 }
 </script>
 
 <style scoped>
-.spinner{
+.spinner {
   margin: auto;
   margin-top: 30px;
 }
